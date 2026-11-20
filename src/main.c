@@ -7,7 +7,7 @@
 #include <math.h>
 
 #ifdef USE_RPI_GPIO
-#include <lgpio.h>
+#include <pigpio.h>
 #endif
 
 #define MAX_READINGS 1000
@@ -33,49 +33,41 @@ static double upper_limit = 76.0;
 
 #ifdef USE_RPI_GPIO
 
-static int gpio_handle = -1;
 static int led_ready = 0;
 
 void led_init(void) {
-    int result;
+    int result = gpioInitialise();
 
-    gpio_handle = lgGpiochipOpen(0);
-
-    if (gpio_handle < 0) {
+    if (result < 0) {
         printf("WARNING: Could not open GPIO chip.\n");
         return;
     }
 
-    result = lgGpioClaimOutput(gpio_handle, 0, LED_GPIO, 0);
+    result = gpioSetMode(LED_GPIO, PI_OUTOUT);
 
     if (result < 0) {
         printf("WARNING: Could not claim GPIO pin.\n");
-        lgGpiochipClose(gpio_handle);
-        gpio_handle = -1;
+        gpioTerminate;
         return;
     }
 
     led_ready = 1;
+    gpioWrite(LED_GPIO, 0);
 
     printf("GPIO LED initialized successfully.\n");
 }
 
 void led_set(int on) {
     if (led_ready) {
-        lgGpioWrite(gpio_handle, LED_GPIO, on ? 1 : 0);
+        gpioWrite(LED_GPIO, on ? 1 : 0);
     }
 }
 
 void led_cleanup(void) {
     if (led_ready) {
-        lgGpioWrite(gpio_handle, LED_GPIO, 0);
-        lgGpioFree(gpio_handle, LED_GPIO);
+        gpioWrite(LED_GPIO, 0);
+        gpioTerminate();
         led_ready = 0;
-    }
-
-    if (gpio_handle >= 0) {
-        lgGpiochipClose(gpio_handle);
-        gpio_handle = -1;
     }
 }
 
