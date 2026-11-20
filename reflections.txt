@@ -1,0 +1,14 @@
+What was your primary contribution to the project?
+My main contribution was developing the C program, setting up the Raspberry Pi, and working on the temperature monitoring and LED warning system.
+
+What was the most challenging technical problem your team encountered?
+Getting the GPIO library working with our Raspberry Pi operating system was the biggest challenge because the original library wasn’t available.
+
+How did your team use testing or debugging to solve a problem?
+I used terminal commands to check installed libraries, verify GPIO functionality, and identify what needed to be changed before compiling the program.
+
+Which skills from CSE 1106 were most useful?
+C programming, functions, conditional statements, loops, structures, and file handling were especially useful for building the project.
+
+What would you improve if you had more time?
+I would add an automatic temperature sensor, improve the monitoring system, and make the interface more interactive.
